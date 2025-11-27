@@ -1,82 +1,13 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createStaticNavigation,
   StaticParamList,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
 
-import { Explore } from "./screens/Explore";
-import { Home } from "./screens/Home";
 import { NotFound } from "./screens/NotFound";
-import { Login } from "./screens/Login";
-import { Signup } from "./screens/Signup";
 
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Extra } from "./screens/Extra";
-
-const HomeTabs = createBottomTabNavigator({
-  screens: {
-    Home: {
-      screen: Home,
-      options: {
-        headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <IconSymbol size={28} name="house.fill" color={color} />
-        ),
-      },
-    },
-    Explore: {
-      screen: Explore,
-      options: {
-        headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <IconSymbol size={28} name="paperplane.fill" color={color} />
-        ),
-      },
-    },
-    Extra: {
-      screen: Extra,
-      options: {
-        headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <IconSymbol size={28} name="paperplane.fill" color={color} />
-        ),
-      },
-    },
-  },
-  screenOptions: {
-    headerShown: false,
-    tabBarButton: HapticTab,
-    tabBarBackground: TabBarBackground,
-    tabBarStyle: Platform.select<any>({
-      ios: {
-        // Use a transparent background on iOS to show the blur effect
-        position: "absolute",
-      },
-      default: {},
-    }),
-  },
-});
-
-const AuthStack = createNativeStackNavigator({
-  screens: {
-    Login: {
-      screen: Login,
-      options: {
-        headerShown: false,
-      },
-    },
-    Signup: {
-      screen: Signup,
-      options: {
-        headerShown: false,
-      },
-    },
-  },
-});
+import AuthStack from "./stacks/AuthStack";
+import HomeTabs from "./tabs/HomeTabs";
 
 const RootStack = createNativeStackNavigator({
   screens: {
