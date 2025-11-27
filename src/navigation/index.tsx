@@ -15,6 +15,7 @@ import { Signup } from "./screens/Signup";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
+import { Extra } from "./screens/Extra";
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -29,6 +30,15 @@ const HomeTabs = createBottomTabNavigator({
     },
     Explore: {
       screen: Explore,
+      options: {
+        headerShown: false,
+        tabBarIcon: ({ color }) => (
+          <IconSymbol size={28} name="paperplane.fill" color={color} />
+        ),
+      },
+    },
+    Extra: {
+      screen: Extra,
       options: {
         headerShown: false,
         tabBarIcon: ({ color }) => (
