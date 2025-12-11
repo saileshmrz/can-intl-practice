@@ -16,13 +16,14 @@ import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 
+
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Home: {
       screen: Home,
       options: {
         headerShown: false,
-        tabBarIcon: ({ color }) => (
+        tabBarIcon: ({ color} :  { color: string }) => (
           <IconSymbol size={28} name="house.fill" color={color} />
         ),
       },
@@ -31,7 +32,7 @@ const HomeTabs = createBottomTabNavigator({
       screen: Explore,
       options: {
         headerShown: false,
-        tabBarIcon: ({ color }) => (
+        tabBarIcon: ({ color }:  { color: string }) => (
           <IconSymbol size={28} name="paperplane.fill" color={color} />
         ),
       },

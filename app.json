@@ -8,18 +8,26 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "scheme": "canintlpractice",
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
+
     "web": {
       "favicon": "src/assets/images/favicon.png"
     },
+
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+
     "plugins": [
       "expo-asset",
       [
