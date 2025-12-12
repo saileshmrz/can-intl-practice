@@ -1,16 +1,10 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createStaticNavigation,
   StaticParamList,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
 
-import { Explore } from "./screens/Explore";
-import { Home } from "./screens/Home";
 import { NotFound } from "./screens/NotFound";
-import { Login } from "./screens/Login";
-import { Signup } from "./screens/Signup";
 
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
