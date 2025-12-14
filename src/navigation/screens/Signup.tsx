@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -6,7 +15,6 @@ import { FormInput } from "@/components/FormInput";
 import { Colors } from "@/constants/Colors";
 import { FormButton } from "@/components/FormButton";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-
 
 type SignupFormData = {
   fullName: string;
@@ -18,10 +26,8 @@ type SignupFormData = {
 export function Signup() {
   const navigation = useNavigation<any>();
 
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
 
   const { control, handleSubmit, watch, formState: { errors } } = useForm<SignupFormData>({
     defaultValues: {
@@ -32,9 +38,7 @@ export function Signup() {
     }
   });
 
-
   const password = watch("password");
-
 
   const onSubmit = (data: SignupFormData) => {
     alert("Account created successfully!");
@@ -42,229 +46,217 @@ export function Signup() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
       >
-        <View style={[styles.container, { backgroundColor: Colors.light.background }]}>
-          <View style={styles.header}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <View style={styles.header}>
+     
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.navigate("Login")}
+              >
+                <Ionicons name="arrow-back-outline" size={28} color={Colors.light.text} />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.backButtonTop}
-              onPress={() => navigation.navigate("Login")}
-            >
-              <Ionicons name="arrow-back-outline" size={28} color={Colors.light.text} />
-            </TouchableOpacity>
-
-
-            <View style={styles.headerTextContainer}>
-              <Text style={styles.titleBold}>Create Account</Text>
-              <Text style={styles.titleNormal}>Sign up to get started</Text>
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.titleBold}>Create Account</Text>
+                <Text style={styles.titleNormal}>Sign up to get started</Text>
+              </View>
             </View>
-          </View>
 
-
-          <Controller
-            control={control}
-            name="fullName"
-            rules={{ required: "Full name is required" }}
-            render={({ field: { onChange, value } }) => (
-              <FormInput
-                label="Full Name"
-                value={value}
-                onChangeText={onChange}
-                placeholder="Full Name"
-                autoCapitalize="words"
-                colorScheme="light"
-                error={errors.fullName?.message}
-                style={styles.inputField}
-              />
-            )}
-          />
-
-
-          <Controller
-            control={control}
-            name="email"
-            rules={{
-              required: "Email is required",
-              pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <FormInput
-                label="Email Address"
-                value={value}
-                onChangeText={onChange}
-                placeholder="Enter your email address"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                colorScheme="light"
-                error={errors.email?.message}
-                style={styles.inputField}
-              />
-            )}
-          />
-
-
-          <View style={styles.inputWrapper}>
             <Controller
               control={control}
-              name="password"
-              rules={{
-                required: "Password is required",
-                minLength: { value: 6, message: "Password must be at least 6 characters" },
-              }}
+              name="fullName"
+              rules={{ required: "Full name is required" }}
               render={({ field: { onChange, value } }) => (
                 <FormInput
-                  label="Password"
+                  label="Full Name"
                   value={value}
                   onChangeText={onChange}
-                  placeholder="Create your password"
-                  secureTextEntry={!showPassword}
+                  placeholder="Full Name"
+                  autoCapitalize="words"
                   colorScheme="light"
-                  error={errors.password?.message}
+                  error={errors.fullName?.message}
                   style={styles.inputField}
                 />
               )}
             />
 
-            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-              <Entypo name={showPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
-            </TouchableOpacity>
-          </View>
-
-
-          <View style={styles.inputWrapper}>
             <Controller
               control={control}
-              name="confirmPassword"
+              name="email"
               rules={{
-                required: "Confirm password is required",
-                validate: value => value === password || "Passwords do not match",
+                required: "Email is required",
+                pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
               }}
               render={({ field: { onChange, value } }) => (
                 <FormInput
-                  label="Confirm Password"
+                  label="Email Address"
                   value={value}
                   onChangeText={onChange}
-                  placeholder="Confirm your password"
-                  secureTextEntry={!showConfirmPassword}
+                  placeholder="Enter your email address"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                   colorScheme="light"
-                  error={errors.confirmPassword?.message}
+                  error={errors.email?.message}
                   style={styles.inputField}
                 />
               )}
             />
 
-            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-              <Entypo name={showConfirmPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+            <View style={styles.inputWrapper}>
+              <Controller
+                control={control}
+                name="password"
+                rules={{
+                  required: "Password is required",
+                  minLength: { value: 6, message: "Password must be at least 6 characters" },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <FormInput
+                    label="Password"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholder="Create your password"
+                    secureTextEntry={!showPassword}
+                    colorScheme="light"
+                    error={errors.password?.message}
+                    style={styles.inputField}
+                  />
+                )}
+              />
+              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+                <Entypo name={showPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <Controller
+                control={control}
+                name="confirmPassword"
+                rules={{
+                  required: "Confirm password is required",
+                  validate: value => value === password || "Passwords do not match",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <FormInput
+                    label="Confirm Password"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholder="Confirm your password"
+                    secureTextEntry={!showConfirmPassword}
+                    colorScheme="light"
+                    error={errors.confirmPassword?.message}
+                    style={styles.inputField}
+                  />
+                )}
+              />
+              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                <Entypo name={showConfirmPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+              </TouchableOpacity>
+            </View>
+
+            <FormButton title="Sign Up" onPress={handleSubmit(onSubmit)} colorScheme="light" />
+
+            <TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginLink}>
+              <Text style={styles.loginLinkText}>
+                Already have an account? <Text style={styles.loginBold}>Login</Text>
+              </Text>
             </TouchableOpacity>
           </View>
-
-
-          <FormButton title="Sign Up" onPress={handleSubmit(onSubmit)} colorScheme="light" />
-
-          <TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginLink}>
-            <Text style={styles.loginLinkText}>
-              Already have an account? <Text style={styles.loginBold}>Login</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
-  content:
-  {
-    flexGrow: 1,
-    justifyContent: "center"
-  },
-  container:
-  {
+  safeArea: {
     flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 30
+    backgroundColor: Colors.light.background,
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    paddingTop: 20,
+    paddingBottom: 50,
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 30,
   },
   header: {
     marginBottom: 40,
     alignItems: "center",
   },
-
-  backButtonTop: {
-    position: "absolute",
-    left: -20,
-    right: 200,
-    top: -55, 
-    padding: 8,
-    zIndex: 1,
+  backButton: {
+    width: 40,
+    marginBottom: 10,
+    marginRight: 300, 
   },
-
   headerTextContainer: {
     alignItems: "center",
     width: "100%",
   },
-
   titleBold: {
     fontSize: 30,
-    fontWeight: 500,
+    fontWeight: "700",
     fontFamily: "PoppinsBold",
     textAlign: "center",
+    color: Colors.light.text,
   },
   titleNormal: {
     fontSize: 18,
     fontFamily: "PoppinsRegular",
     textAlign: "center",
-
     marginTop: 5,
+    color: Colors.light.text,
   },
-  inputWrapper:
-  {
+  inputWrapper: {
     position: "relative",
     width: "100%",
-    marginBottom: 15
+    marginBottom: 20,
   },
   inputField: {
-    backgroundColor: 'rgba(238, 236, 232, 0.3)',
-    borderRadius: 5,
+    backgroundColor: "rgba(238, 236, 232, 0.3)",
+    borderRadius: 8,
     paddingHorizontal: 18,
     paddingVertical: 14,
     fontSize: 16,
     color: Colors.light.text,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: Platform.OS === "ios" ? 0.15 : 0.1,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 4,
     borderWidth: 1,
-    borderColor: 'rgba(224, 211, 211, 0.4)',
+    borderColor: "rgba(224, 211, 211, 0.4)",
   },
-  eyeIcon:
-  {
+  eyeIcon: {
     position: "absolute",
     right: 10,
-    top: 38
+    top: 38,
   },
-  loginLink:
-  {
-    marginTop: 20,
-    alignItems: "center"
+  loginLink: {
+    marginTop: 25,
+    alignItems: "center",
   },
-  loginLinkText:
-  {
+  loginLinkText: {
     color: Colors.light.text,
     fontSize: 16,
-    fontFamily: "PoppinsRegular"
+    fontFamily: "PoppinsRegular",
   },
-  loginBold:
-  {
+  loginBold: {
     fontFamily: "PoppinsMedium",
-    color: Colors.light.primary
+    color: Colors.light.primary,
   },
 });

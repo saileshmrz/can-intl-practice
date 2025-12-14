@@ -8,56 +8,64 @@ import { SearchBar } from "@/components/ui/serachBar";
 import { useState } from "react";
 import { FormButton } from "@/components/FormButton";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from "@react-navigation/native";
+
 
 export function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigation = useNavigation<any>();
 
   return (
-    <ThemedView style={[styles.container, { backgroundColor: Colors.light.background }]}>
+    <ThemedView style={styles.container}>
       
       <HeaderBar 
         title="Dashboard" 
         showBack={false} 
         rightComponent={
-          <TouchableOpacity >
+          <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
             <Ionicons name="notifications-outline" size={28} color={Colors.light.primary} />
           </TouchableOpacity>
         }
       />
 
-
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
-        <ThemedText style={styles.welcomeText}>Welcome Back!</ThemedText>
+        <ThemedText style={styles.welcomeText} type="title">Welcome Back!</ThemedText>
         <View style={styles.searchContainer}>
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Search for content"
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search for content"
+          />
+        </View>
+
+        <FormButton
+          title="Start Your Order"
+          onPress={() => {}}
+          colorScheme="light"
+          leftComponent={
+            <MaterialIcons name="coffee-maker" size={24} color={Colors.light.background} />
+          }
         />
-      </View>
-      <FormButton
-                  title="Start Your Order"
-                  onPress={() => {}}
-                  colorScheme="light"
-                  leftComponent= {
-                    <MaterialIcons name="coffee-maker" size={24} color={Colors.light.background}/>
-                  }
-                />
-        <ThemedText style={styles.subtitleText}>Daily Specials</ThemedText>
+
+        <ThemedText style={styles.subtitleText} type="subtitle">Daily Specials</ThemedText>
 
         <View style={styles.cardsContainer}>
 
           <TouchableOpacity style={styles.card}>
-            <Ionicons name="chatbubble-ellipses-outline" size={32} color={Colors.light.primary} />
-            <ThemedText style={styles.cardTitle}>Messages</ThemedText>
-            <ThemedText style={styles.cardSubtitle}>Check your latest messages</ThemedText>
+            <ThemedView>
+              <Ionicons name="chatbubble-ellipses-outline" size={32} color={Colors.light.primary} />
+              <ThemedText style={styles.cardTitle}>Messages</ThemedText>
+              <ThemedText style={styles.cardSubtitle}>Check your latest messages</ThemedText>
+            </ThemedView>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.card}>
-            <Ionicons name="settings-outline" size={32} color={Colors.light.primary} />
-            <ThemedText style={styles.cardTitle}>Settings</ThemedText>
-            <ThemedText style={styles.cardSubtitle}>Manage your preferences</ThemedText>
+            <ThemedView>
+              <Ionicons name="settings-outline" size={32} color={Colors.light.primary} />
+              <ThemedText style={styles.cardTitle}>Settings</ThemedText>
+              <ThemedText style={styles.cardSubtitle}>Manage your preferences</ThemedText>
+            </ThemedView>
           </TouchableOpacity>
 
         </View>
@@ -74,7 +82,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginTop: 5,
     marginBottom: 10,
-    
   },
   content: {
     padding: 20,
@@ -83,18 +90,16 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 30,
     fontFamily: "PoppinsBold",
-    color: Colors.light.text,
-    fontWeight:700,
+    fontWeight: 700,
     marginBottom: 5,
     marginTop: 15,
     padding: 5,
   },
   subtitleText: {
     fontSize: 20,
-    fontWeight: 600,
+    fontWeight: "600",
     fontFamily: "Poppins-Regular",
-    color: Colors.light.text,
-    marginTop:25,
+    marginTop: 25,
     marginBottom: 15,
   },
   cardsContainer: {
@@ -102,7 +107,6 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   card: {
-    backgroundColor: Colors.light.background,
     borderRadius: 16,
     padding: 20,
     shadowColor: "#000",
@@ -114,13 +118,11 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontFamily: "PoppinsMedium",
-    color: Colors.light.text,
     marginTop: 10,
   },
   cardSubtitle: {
     fontSize: 14,
     fontFamily: "PoppinsRegular",
-    color: Colors.light.primary,
     marginTop: 4,
   },
 });

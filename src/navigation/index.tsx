@@ -19,6 +19,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Orders } from "./screens/Orders";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Profile } from "./screens/Profile";
+import { Notification } from "./screens/Notification";
+
 
 
 
@@ -106,6 +108,12 @@ const RootStack = createNativeStackNavigator({
       screen: HomeTabs,
       options: {
         headerShown: false,
+      },
+    },
+    Notification: {
+      screen: Notification,
+      options: { headerShown: false, title: "Notifications" 
+
       },
     },
     NotFound: {
