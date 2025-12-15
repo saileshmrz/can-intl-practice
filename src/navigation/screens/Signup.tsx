@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
@@ -25,7 +24,6 @@ type SignupFormData = {
 
 export function Signup() {
   const navigation = useNavigation<any>();
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -46,153 +44,151 @@ export function Signup() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    <KeyboardAvoidingView
+      style={styles.container} // Use main container style
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.container}>
-            <View style={styles.header}>
-     
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.navigate("Login")}
-              >
-                <Ionicons name="arrow-back-outline" size={28} color={Colors.light.text} />
-              </TouchableOpacity>
+        <View style={styles.innerContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Ionicons name="arrow-back-outline" size={28} color={Colors.light.text} />
+            </TouchableOpacity>
 
-              <View style={styles.headerTextContainer}>
-                <Text style={styles.titleBold}>Create Account</Text>
-                <Text style={styles.titleNormal}>Sign up to get started</Text>
-              </View>
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.titleBold}>Create Account</Text>
+              <Text style={styles.titleNormal}>Sign up to get started</Text>
             </View>
+          </View>
 
+          <Controller
+            control={control}
+            name="fullName"
+            rules={{ required: "Full name is required" }}
+            render={({ field: { onChange, value } }) => (
+              <FormInput
+                label="Full Name"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Full Name"
+                autoCapitalize="words"
+                colorScheme="light"
+                error={errors.fullName?.message}
+                style={styles.inputField}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: "Email is required",
+              pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <FormInput
+                label="Email Address"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Enter your email address"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                colorScheme="light"
+                error={errors.email?.message}
+                style={styles.inputField}
+              />
+            )}
+          />
+
+          <View style={styles.inputWrapper}>
             <Controller
               control={control}
-              name="fullName"
-              rules={{ required: "Full name is required" }}
-              render={({ field: { onChange, value } }) => (
-                <FormInput
-                  label="Full Name"
-                  value={value}
-                  onChangeText={onChange}
-                  placeholder="Full Name"
-                  autoCapitalize="words"
-                  colorScheme="light"
-                  error={errors.fullName?.message}
-                  style={styles.inputField}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="email"
+              name="password"
               rules={{
-                required: "Email is required",
-                pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
               }}
               render={({ field: { onChange, value } }) => (
                 <FormInput
-                  label="Email Address"
+                  label="Password"
                   value={value}
                   onChangeText={onChange}
-                  placeholder="Enter your email address"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  placeholder="Create your password"
+                  secureTextEntry={!showPassword}
                   colorScheme="light"
-                  error={errors.email?.message}
+                  error={errors.password?.message}
                   style={styles.inputField}
                 />
               )}
             />
-
-            <View style={styles.inputWrapper}>
-              <Controller
-                control={control}
-                name="password"
-                rules={{
-                  required: "Password is required",
-                  minLength: { value: 6, message: "Password must be at least 6 characters" },
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <FormInput
-                    label="Password"
-                    value={value}
-                    onChangeText={onChange}
-                    placeholder="Create your password"
-                    secureTextEntry={!showPassword}
-                    colorScheme="light"
-                    error={errors.password?.message}
-                    style={styles.inputField}
-                  />
-                )}
-              />
-              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-                <Entypo name={showPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Controller
-                control={control}
-                name="confirmPassword"
-                rules={{
-                  required: "Confirm password is required",
-                  validate: value => value === password || "Passwords do not match",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <FormInput
-                    label="Confirm Password"
-                    value={value}
-                    onChangeText={onChange}
-                    placeholder="Confirm your password"
-                    secureTextEntry={!showConfirmPassword}
-                    colorScheme="light"
-                    error={errors.confirmPassword?.message}
-                    style={styles.inputField}
-                  />
-                )}
-              />
-              <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                <Entypo name={showConfirmPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
-              </TouchableOpacity>
-            </View>
-
-            <FormButton title="Sign Up" onPress={handleSubmit(onSubmit)} colorScheme="light" />
-
-            <TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginLink}>
-              <Text style={styles.loginLinkText}>
-                Already have an account? <Text style={styles.loginBold}>Login</Text>
-              </Text>
+            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+              <Entypo name={showPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+          <View style={styles.inputWrapper}>
+            <Controller
+              control={control}
+              name="confirmPassword"
+              rules={{
+                required: "Confirm password is required",
+                validate: value => value === password || "Passwords do not match",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <FormInput
+                  label="Confirm Password"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="Confirm your password"
+                  secureTextEntry={!showConfirmPassword}
+                  colorScheme="light"
+                  error={errors.confirmPassword?.message}
+                  style={styles.inputField}
+                />
+              )}
+            />
+            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <Entypo name={showConfirmPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+            </TouchableOpacity>
+          </View>
+
+          <FormButton title="Sign Up" onPress={handleSubmit(onSubmit)} colorScheme="light" />
+
+          <TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginLink}>
+            <Text style={styles.loginLinkText}>
+              Already have an account? <Text style={styles.loginBold}>Login</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
     backgroundColor: Colors.light.background,
+  },
+  innerContainer: {
+    flex: 1,
+    paddingHorizontal: 30,
+    marginTop: 40
   },
   content: {
     flexGrow: 1,
     justifyContent: "flex-start",
     paddingTop: 20,
     paddingBottom: 50,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 30,
   },
   header: {
     marginBottom: 40,
@@ -201,7 +197,7 @@ const styles = StyleSheet.create({
   backButton: {
     width: 40,
     marginBottom: 10,
-    marginRight: 300, 
+    marginRight: 300,
   },
   headerTextContainer: {
     alignItems: "center",

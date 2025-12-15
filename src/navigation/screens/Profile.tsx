@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Image, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, ScrollView, Alert, Switch, } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -8,10 +8,12 @@ import { Colors } from "@/constants/Colors";
 import { HeaderBar } from "@/components/ui/HeadBar";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 export function Profile() {
   const [image, setImage] = useState<string | null>(null);
   const navigation = useNavigation();
+  const { theme, toggleTheme } = useTheme();
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -19,12 +21,10 @@ export function Profile() {
       alert("Permission to access gallery is required!");
       return;
     }
-
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       quality: 1,
     });
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -40,9 +40,7 @@ export function Profile() {
           text: "Logout",
           style: "destructive",
           onPress: () => {
-          
             Alert.alert("Logged Out", "You have been successfully logged out.");
-         
             navigation.reset({
               index: 0,
               routes: [{ name: "Auth", params: { screen: "Login" } }],
@@ -54,62 +52,86 @@ export function Profile() {
     );
   };
 
+  const bgColor = theme === "dark" ? Colors.dark.background : Colors.light.background;
+  const cardColor = theme === "dark" ? "#2A2A2A" : Colors.light.background;
+  const textColor = theme === "dark" ? Colors.dark.text : Colors.light.text;
+  const secondaryText = theme === "dark" ? Colors.dark.primary : Colors.light.primary;
+  const iconColor = theme === "dark" ? Colors.dark.text : Colors.light.primary;
+
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { backgroundColor: bgColor }]}>
       <HeaderBar title="Profile" showBack={true} />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: 200 }]}
         showsVerticalScrollIndicator={false}
       >
+
         <TouchableOpacity onPress={pickImage} style={styles.profileContainer}>
           {image ? (
             <Image source={{ uri: image }} style={styles.profileImage} />
           ) : (
-            <Ionicons name="person-circle-outline" size={120} color={Colors.light.primary} />
+            <Ionicons name="person-circle-outline" size={120} color={iconColor} />
           )}
         </TouchableOpacity>
 
-        <ThemedText style={styles.name}>John Doe</ThemedText>
-        <ThemedText style={styles.email}>johndoe@example.com</ThemedText>
+        <ThemedText style={[styles.name, { color: textColor }]}>John Doe</ThemedText>
+        <ThemedText style={[styles.email, { color: secondaryText }]}>
+          johndoe@example.com
+        </ThemedText>
 
-        <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Personal Information</ThemedText>
+
+        <View style={[styles.card, { backgroundColor: cardColor }]}>
+          <ThemedText style={[styles.cardTitle, { color: textColor }]}>Personal Information</ThemedText>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="person" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Full Name: John Doe</ThemedText>
+            <MaterialIcons name="person" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Full Name: John Doe</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="email" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Email: johndoe@example.com</ThemedText>
+            <MaterialIcons name="email" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Email: johndoe@example.com</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="phone" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Phone: +1 234 567 890</ThemedText>
+            <MaterialIcons name="phone" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Phone: +1 234 567 890</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="location-on" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Address: 123 Main St, City</ThemedText>
+            <MaterialIcons name="location-on" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Address: 123 Main St, City</ThemedText>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Settings</ThemedText>
-          <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="notifications" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Notifications</ThemedText>
+
+        <View style={[styles.card, { backgroundColor: cardColor }]}>
+          <ThemedText style={[styles.cardTitle, { color: textColor }]}>Settings</ThemedText>
+
+          <View style={styles.infoRow}>
+            <MaterialIcons name="dark-mode" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Dark Mode</ThemedText>
+            <Switch
+              value={theme === "dark"}
+              onValueChange={toggleTheme}
+              thumbColor={theme === "dark" ? Colors.dark.primary : Colors.light.primary}
+              trackColor={{ false: "#ccc", true: "#555" }}
+              style={{ marginLeft: "auto" }}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.infoRow} onPress={() => navigation.navigate("Notification")}>
+            <MaterialIcons name="notifications" size={24} color={iconColor}/>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Notifications</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="lock-outline" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Change Password</ThemedText>
+            <MaterialIcons name="lock-outline" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Change Password</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow}>
-            <MaterialIcons name="info-outline" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>About App</ThemedText>
+            <MaterialIcons name="info-outline" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>About App</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.infoRow} onPress={handleLogout}>
-            <MaterialIcons name="exit-to-app" size={24} color={Colors.light.primary} />
-            <ThemedText style={styles.infoValue}>Logout</ThemedText>
+            <MaterialIcons name="exit-to-app" size={24} color={iconColor} />
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>Logout</ThemedText>
           </TouchableOpacity>
         </View>
 
@@ -120,62 +142,64 @@ export function Profile() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
+  container:
+  {
+    flex: 1
   },
-  content: {
+  content:
+  {
     alignItems: "center",
-    padding: 20,
+    padding: 20
   },
-  profileContainer: {
+  profileContainer:
+  {
     marginBottom: 20,
     borderRadius: 75,
-    overflow: "hidden",
+    overflow: "hidden"
   },
-  profileImage: {
+  profileImage:
+  {
     width: 120,
     height: 120,
-    borderRadius: 60,
+    borderRadius: 60
   },
-  name: {
+  name:
+  {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.light.text,
-    marginBottom: 5,
+    marginBottom: 5
   },
-  email: {
+  email:
+  {
     fontSize: 16,
-    color: Colors.light.primary,
     opacity: 0.8,
-    marginBottom: 20,
+    marginBottom: 20
   },
-  section: {
+  card: {
     width: "100%",
-    marginTop: 20,
-    padding: 15,
     borderRadius: 12,
-    backgroundColor: Colors.light.background,
+    padding: 15,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 15,
   },
-  sectionTitle: {
+  cardTitle:
+  {
     fontSize: 18,
-    fontWeight: "700",
-    color: Colors.light.text,
-    marginBottom: 10,
+    fontWeight: "600",
+    marginBottom: 10
   },
-  infoRow: {
+  infoRow:
+  {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
-    gap: 10,
+    paddingVertical: 8, gap: 10
   },
-  infoValue: {
-    fontSize: 16,
-    color: Colors.light.primary,
+  infoValue:
+  {
+    fontSize: 16
   },
 });

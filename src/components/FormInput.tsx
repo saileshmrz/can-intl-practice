@@ -6,6 +6,7 @@ interface FormInputProps extends TextInputProps {
   label?: string;
   colorScheme?: "light" | "dark";
   error?: string; 
+  textColor ?: string,
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -13,6 +14,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   colorScheme = "light",
   style,
   error,   
+  textColor,
   ...props
 }) => {
   return (

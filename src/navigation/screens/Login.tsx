@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { FormInput } from "@/components/FormInput";
@@ -23,127 +23,123 @@ export function Login() {
     },
   });
 
-  const passwordValue = watch("password");
-
   const onSubmit = (data: LoginFormData) => {
     alert("Logged in successfully!");
     navigation.navigate("HomeTabs");
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    <KeyboardAvoidingView
+      style={styles.container} // Use main container style
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.titleBold}>Welcome Back</Text>
-              <Text style={styles.titleNormal}>Login to continue</Text>
-            </View>
+        <View style={styles.innerContainer}>
+          <View style={styles.header}>
+            <Text style={styles.titleBold}>Welcome Back</Text>
+            <Text style={styles.titleNormal}>Login to continue</Text>
+          </View>
 
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: "Email is required",
+              pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <FormInput
+                label="Email Address"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                colorScheme="light"
+                error={errors.email?.message}
+                style={styles.inputField}
+              />
+            )}
+          />
+
+          <View style={styles.inputWrapper}>
             <Controller
               control={control}
-              name="email"
+              name="password"
               rules={{
-                required: "Email is required",
-                pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
               }}
               render={({ field: { onChange, value } }) => (
                 <FormInput
-                  label="Email Address"
+                  label="Password"
                   value={value}
                   onChangeText={onChange}
-                  placeholder="Enter your email"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  placeholder="Enter your password"
+                  secureTextEntry={!showPassword}
                   colorScheme="light"
-                  error={errors.email?.message}
+                  error={errors.password?.message}
                   style={styles.inputField}
                 />
               )}
             />
 
-            <View style={styles.inputWrapper}>
-              <Controller
-                control={control}
-                name="password"
-                rules={{
-                  required: "Password is required",
-                  minLength: { value: 6, message: "Password must be at least 6 characters" },
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <FormInput
-                    label="Password"
-                    value={value}
-                    onChangeText={onChange}
-                    placeholder="Enter your password"
-                    secureTextEntry={!showPassword}
-                    colorScheme="light"
-                    error={errors.password?.message}
-                    style={styles.inputField}
-                  />
-                )}
-              />
-
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Entypo
-                  name={showPassword ? "eye" : "eye-with-line"}
-                  size={26}
-                  color="gray"
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.forgotPasswordContainer}>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-
-            <FormButton
-              title="Login"
-              onPress={handleSubmit(onSubmit)}
-              colorScheme="light"
-            />
-
             <TouchableOpacity
-              style={styles.registerContainer}
-              onPress={() => navigation.navigate("Signup")}
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(!showPassword)}
             >
-              <Text style={styles.registerText}>
-                Don&apos;t have an account? <Text style={styles.registerLink}>Signup</Text>
-              </Text>
+              <Entypo
+                name={showPassword ? "eye" : "eye-with-line"}
+                size={26}
+                color="gray"
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.forgotPasswordContainer}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+          <FormButton
+            title="Login"
+            onPress={handleSubmit(onSubmit)}
+            colorScheme="light"
+          />
+
+          <TouchableOpacity
+            style={styles.registerContainer}
+            onPress={() => navigation.navigate("Signup")}
+          >
+            <Text style={styles.registerText}>
+              Don&apos;t have an account? <Text style={styles.registerLink}>Signup</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
     backgroundColor: Colors.light.background,
   },
-  flex: { flex: 1 },
+  innerContainer: {
+    flex: 1,
+    paddingHorizontal: 30,
+    marginTop: 40,
+  },
   content: {
     flexGrow: 1,
     justifyContent: "flex-start",
-    paddingTop: 50, 
+    paddingTop: 50,
     paddingBottom: 20,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 30,
   },
   header: {
     marginBottom: 30,
