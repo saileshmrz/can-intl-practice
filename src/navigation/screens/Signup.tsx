@@ -1,162 +1,169 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { FormInput } from "@/components/FormInput";
 import { Colors } from "@/constants/Colors";
 import { FormButton } from "@/components/FormButton";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
+
+type SignupFormData = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export function Signup() {
   const navigation = useNavigation<any>();
-
-  
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
- 
-  const [fullNameError, setFullNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  const handleSignup = () => {
-    let hasError = false;
-
-  
-    if (!fullName.trim()) {
-      setFullNameError("Full name is required");
-      hasError = true;
-    } else {
-      setFullNameError("");
+  const { control, handleSubmit, watch, formState: { errors } } = useForm<SignupFormData>({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     }
+  });
 
-  
-    if (!email.trim()) {
-      setEmailError("Email is required");
-      hasError = true;
-    } else {
-      setEmailError("");
-    }
+  const password = watch("password");
 
-    
-    if (!password) {
-      setPasswordError("Password is required");
-      hasError = true;
-    } else {
-      setPasswordError("");
-    }
-
-   
-    if (!confirmPassword) {
-      setConfirmPasswordError("Confirm password is required");
-      hasError = true;
-    } else if (password && password !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match");
-      hasError = true;
-    } else {
-      setConfirmPasswordError("");
-    }
-
-    if (hasError) return;
-
-
+  const onSubmit = (data: SignupFormData) => {
     alert("Account created successfully!");
     navigation.navigate("Login");
   };
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={styles.container} // Use main container style
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.container, { backgroundColor: Colors.light.background }]}>
-          <Text style={[styles.title, { color: Colors.light.text }]}>Signup</Text>
-
-          <View style={styles.inputWrapper}>
-          <FormInput
-            label="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Full Name"
-            autoCapitalize="words"
-            colorScheme="light"
-          />
-          {fullNameError ? <Text style={styles.errorText}>{fullNameError}</Text> : null}
-          </View>
-
-          <View style={styles.inputWrapper}>
-          <FormInput
-            label="Email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Enter your email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            colorScheme="light"
-          />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-          </View>
-          
-          <View style={styles.inputWrapper}>
-            <FormInput
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Create your password"
-              secureTextEntry={!showPassword}
-              colorScheme="light"
-            />
+        <View style={styles.innerContainer}>
+          <View style={styles.header}>
             <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setShowPassword(!showPassword)}
+              style={styles.backButton}
+              onPress={() => navigation.navigate("Login")}
             >
-              <Entypo
-                name={showPassword ? "eye" : "eye-with-line"}
-                size={26}
-                color="gray"
-              />
+              <Ionicons name="arrow-back-outline" size={28} color={Colors.light.text} />
             </TouchableOpacity>
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.titleBold}>Create Account</Text>
+              <Text style={styles.titleNormal}>Sign up to get started</Text>
             </View>
-
-          <View style={styles.inputWrapper}>
-            <FormInput
-              label="Confirm Password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="Confirm your password"
-              secureTextEntry={!showConfirmPassword}
-              colorScheme="light"
-            />
-            <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              <Entypo
-                name={showConfirmPassword ? "eye" : "eye-with-line"}
-                size={26}
-                color="gray"
-              />
-            </TouchableOpacity>
-          {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
           </View>
 
-          <FormButton title="Sign Up" onPress={handleSignup} colorScheme="light" />
+          <Controller
+            control={control}
+            name="fullName"
+            rules={{ required: "Full name is required" }}
+            render={({ field: { onChange, value } }) => (
+              <FormInput
+                label="Full Name"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Full Name"
+                autoCapitalize="words"
+                colorScheme="light"
+                error={errors.fullName?.message}
+                style={styles.inputField}
+              />
+            )}
+          />
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}
-            style={styles.loginLink}
-          >
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: "Email is required",
+              pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <FormInput
+                label="Email Address"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Enter your email address"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                colorScheme="light"
+                error={errors.email?.message}
+                style={styles.inputField}
+              />
+            )}
+          />
+
+          <View style={styles.inputWrapper}>
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <FormInput
+                  label="Password"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="Create your password"
+                  secureTextEntry={!showPassword}
+                  colorScheme="light"
+                  error={errors.password?.message}
+                  style={styles.inputField}
+                />
+              )}
+            />
+            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+              <Entypo name={showPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <Controller
+              control={control}
+              name="confirmPassword"
+              rules={{
+                required: "Confirm password is required",
+                validate: value => value === password || "Passwords do not match",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <FormInput
+                  label="Confirm Password"
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="Confirm your password"
+                  secureTextEntry={!showConfirmPassword}
+                  colorScheme="light"
+                  error={errors.confirmPassword?.message}
+                  style={styles.inputField}
+                />
+              )}
+            />
+            <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <Entypo name={showConfirmPassword ? "eye" : "eye-with-line"} size={26} color="gray" />
+            </TouchableOpacity>
+          </View>
+
+          <FormButton title="Sign Up" onPress={handleSubmit(onSubmit)} colorScheme="light" />
+
+          <TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginLink}>
             <Text style={styles.loginLinkText}>
               Already have an account? <Text style={styles.loginBold}>Login</Text>
             </Text>
@@ -168,25 +175,67 @@ export function Signup() {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flexGrow: 1,
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 30,
+    backgroundColor: Colors.light.background,
   },
-  title: {
-    fontSize: 32,
-    fontFamily: "PoppinsBold",
+  innerContainer: {
+    flex: 1,
+    paddingHorizontal: 30,
+    marginTop: 40
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    paddingTop: 20,
+    paddingBottom: 50,
+  },
+  header: {
     marginBottom: 40,
+    alignItems: "center",
+  },
+  backButton: {
+    width: 40,
+    marginBottom: 10,
+    marginRight: 300,
+  },
+  headerTextContainer: {
+    alignItems: "center",
+    width: "100%",
+  },
+  titleBold: {
+    fontSize: 30,
+    fontWeight: "700",
+    fontFamily: "PoppinsBold",
     textAlign: "center",
+    color: Colors.light.text,
+  },
+  titleNormal: {
+    fontSize: 18,
+    fontFamily: "PoppinsRegular",
+    textAlign: "center",
+    marginTop: 5,
+    color: Colors.light.text,
   },
   inputWrapper: {
     position: "relative",
     width: "100%",
-    marginBottom: 15,
+    marginBottom: 20,
+  },
+  inputField: {
+    backgroundColor: "rgba(238, 236, 232, 0.3)",
+    borderRadius: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: Colors.light.text,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === "ios" ? 0.15 : 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: "rgba(224, 211, 211, 0.4)",
   },
   eyeIcon: {
     position: "absolute",
@@ -194,7 +243,7 @@ const styles = StyleSheet.create({
     top: 38,
   },
   loginLink: {
-    marginTop: 20,
+    marginTop: 25,
     alignItems: "center",
   },
   loginLinkText: {
@@ -205,11 +254,5 @@ const styles = StyleSheet.create({
   loginBold: {
     fontFamily: "PoppinsMedium",
     color: Colors.light.primary,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 14,
-    marginTop: 1,
-    fontFamily: "PoppinsRegular",
   },
 });

@@ -1,23 +1,28 @@
 import 'react-native-reanimated';
-import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
 
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
 import { Colors } from './constants/Colors';
 import { Navigation } from './navigation';
+import { ThemeProvider } from './context/ThemeContext';
+import { ProfileProvider } from './context/ProfileContext';
 
 SplashScreen.preventAutoHideAsync();
 
 export function App() {
   const colorScheme = useColorScheme();
+
   const [loaded] = useFonts({
     SpaceMono: require('./assets/fonts/SpaceMono-Regular.ttf'),
   });
 
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
@@ -25,26 +30,41 @@ export function App() {
     colorScheme === 'dark'
       ? {
           ...DarkTheme,
-          colors: { ...DarkTheme.colors, primary: Colors[colorScheme ?? 'light'].tint },
+          colors: {
+            ...DarkTheme.colors,
+            primary: Colors.dark.tint,
+            background: Colors.dark.background,
+            card: Colors.dark.background,
+            text: Colors.dark.text,
+          },
         }
       : {
           ...DefaultTheme,
-          colors: { ...DefaultTheme.colors, primary: Colors[colorScheme ?? 'light'].tint },
+          colors: {
+            ...DefaultTheme.colors,
+            primary: Colors.light.tint,
+            background: Colors.light.background,
+            card: Colors.light.background,
+            text: Colors.light.text,
+          },
         };
 
   return (
-    <Navigation
-      theme={theme}
-      linking={{
-        enabled: 'auto',
-        prefixes: [
-          // Change the scheme to match your app's scheme defined in app.json
-          'helloworld://',
-        ],
-      }}
-      onReady={() => {
-        SplashScreen.hideAsync();
-      }}
-    />
+    <ThemeProvider>
+      <ProfileProvider>
+        <SafeAreaProvider>
+          <Navigation
+            theme={theme}
+            linking={{
+              enabled: 'auto',
+              prefixes: ['helloworld://'],
+            }}
+            onReady={() => {
+              SplashScreen.hideAsync();
+            }}
+          />
+        </SafeAreaProvider>
+      </ProfileProvider>
+    </ThemeProvider>
   );
 }
