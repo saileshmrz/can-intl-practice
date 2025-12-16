@@ -12,6 +12,8 @@ import { Colors } from './constants/Colors';
 import { Navigation } from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
 import { ProfileProvider } from './context/ProfileContext';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from "@/components/AppToast";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -63,6 +65,7 @@ export function App() {
               SplashScreen.hideAsync();
             }}
           />
+          <Toast config={toastConfig} />
         </SafeAreaProvider>
       </ProfileProvider>
     </ThemeProvider>

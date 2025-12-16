@@ -7,6 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { Colors } from "@/constants/Colors";
 import { FormInput } from "@/components/FormInput";
 import { FormButton } from "@/components/FormButton";
+import { showToast } from "@/utils/toast";
 
 type OrderFormData = {
   name: string;
@@ -35,7 +36,7 @@ export function OrderForm() {
 
   const onSubmit = (data: OrderFormData) => {
     console.log(data);
-    alert("Order submitted!");
+    showToast("success", "Order submitted!");
   };
 
   return (

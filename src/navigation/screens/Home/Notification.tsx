@@ -1,10 +1,11 @@
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { HeaderBar } from "@/components/ui/HeadBar";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/context/ThemeContext";
 import { Colors } from "@/constants/Colors";
+import { showToast } from "@/utils/toast";
 
 const sampleNotifications = [
   { id: "1", title: "Order Confirmed", description: "Your order #12345 has been confirmed.", time: "2h ago" },
@@ -21,9 +22,26 @@ export function Notification({ navigation }: any) {
   const textColor = theme === "dark" ? Colors.dark.text : Colors.light.text;
   const secondaryText = theme === "dark" ? Colors.dark.primary : Colors.light.primary;
 
+  const handleMarkAllRead = () => {
+   
+    showToast("error", "All notifications marked as read")
+  };
+
   return (
     <ThemedView style={[styles.container, { backgroundColor: bgColor }]}>
       <HeaderBar title="Notifications" showBack={true} />
+
+    
+      <View style={styles.markReadContainer}>
+        <TouchableOpacity
+          style={[styles.markReadButton, { borderColor: secondaryText }]}
+          onPress={handleMarkAllRead}
+        >
+          <ThemedText style={[styles.markReadText, { color: secondaryText }]}>
+            Mark All as Read
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={sampleNotifications}
@@ -45,13 +63,29 @@ export function Notification({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:
-  {
+  container: {
     flex: 1
   },
-  content:
-  {
-    padding: 20,
+  markReadContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  markReadButton: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignSelf: "flex-start",
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  markReadText: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
     gap: 15
   },
   notificationCard: {

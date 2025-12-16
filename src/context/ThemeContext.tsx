@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Alert } from 'react-native';
+import React, { createContext, useState, useContext, ReactNode } from "react";
+import { showToast } from "@/utils/toast";
 
-type Theme = 'light' | 'dark';
+type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -11,16 +11,17 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>("light");
 
   const toggleTheme = () => {
-    setTheme((prev) =>{
-      const nextTheme = prev === 'light' ? 'dark' : 'light';
+    setTheme(prev => {
+      const nextTheme = prev === "light" ? "dark" : "light";
 
-      if (nextTheme === 'dark') {
-        Alert.alert("Dark mode activated 🌙");
-      }
-      
+      showToast(
+        "success",
+        nextTheme === "dark" ? "Dark mode enabled" : "Light mode enabled"
+      );
+
       return nextTheme;
     });
   };
@@ -34,6 +35,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme must be used within ThemeProvider');
+  if (!context) {
+    throw new Error("useTheme must be used within ThemeProvider");
+  }
   return context;
 };

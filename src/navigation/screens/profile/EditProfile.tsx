@@ -3,14 +3,13 @@ import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-nat
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-
 import { Colors } from "@/constants/Colors";
-import { ThemedText } from "@/components/ThemedText";
 import { FormInput } from "@/components/FormInput";
 import { FormButton } from "@/components/FormButton";
 import { HeaderBar } from "@/components/ui/HeadBar";
 import { useTheme } from "@/context/ThemeContext";
 import { useProfile } from "@/context/ProfileContext";
+import { showToast } from "@/utils/toast";
 
 export function EditProfile() {
   const { profileImage, setProfileImage } = useProfile();
@@ -29,7 +28,7 @@ export function EditProfile() {
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      alert("Permission to access gallery is required!");
+      showToast("success", "Permission to access gallery is required!");
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -43,7 +42,7 @@ export function EditProfile() {
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
-    alert("Profile updated successfully!");
+    showToast("success", "Profile updated successfully!")
   };
 
   const textColor = theme === "dark" ? Colors.dark.text : Colors.light.text;
@@ -55,7 +54,7 @@ export function EditProfile() {
       <HeaderBar title="Edit Profile" showBack={true} />
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 150 }} showsVerticalScrollIndicator={false}>
-        {/* Profile Image Section */}
+       
         <View style={styles.profileSection}>
           <View style={styles.profileContainer}>
             {profileImage ? (
@@ -76,7 +75,7 @@ export function EditProfile() {
           </View>
         </View>
 
-        {/* Form Fields */}
+       
         <Controller
           control={control}
           name="firstName"
@@ -172,7 +171,7 @@ export function EditProfile() {
           )}
         />
 
-        {/* Save Button */}
+       
         <FormButton
           title="Save Changes"
           onPress={handleSubmit(onSubmit)}

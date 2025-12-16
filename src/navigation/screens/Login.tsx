@@ -6,6 +6,8 @@ import { Colors } from "@/constants/Colors";
 import { FormButton } from "@/components/FormButton";
 import { Entypo } from "@expo/vector-icons";
 import { useForm, Controller } from "react-hook-form";
+import { showToast } from "@/utils/toast";
+
 
 type LoginFormData = {
   email: string;
@@ -24,13 +26,15 @@ export function Login() {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    alert("Logged in successfully!");
+    showToast("success", "Logged in successfully", "Welcome to the dashboard");
+
     navigation.navigate("HomeTabs");
   };
 
+
   return (
     <KeyboardAvoidingView
-      style={styles.container} // Use main container style
+      style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
