@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { Alert } from 'react-native';
 
 type Theme = 'light' | 'dark';
 
@@ -13,7 +14,15 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setTheme((prev) =>{
+      const nextTheme = prev === 'light' ? 'dark' : 'light';
+
+      if (nextTheme === 'dark') {
+        Alert.alert("Dark mode activated 🌙");
+      }
+      
+      return nextTheme;
+    });
   };
 
   return (

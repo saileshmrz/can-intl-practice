@@ -11,7 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Colors } from './constants/Colors';
 import { Navigation } from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
-
+import { ProfileProvider } from './context/ProfileContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +26,6 @@ export function App() {
     return null;
   }
 
- 
   const theme =
     colorScheme === 'dark'
       ? {
@@ -52,18 +51,20 @@ export function App() {
 
   return (
     <ThemeProvider>
-      <SafeAreaProvider>
-        <Navigation
-          theme={theme} 
-          linking={{
-            enabled: 'auto',
-            prefixes: ['helloworld://'],
-          }}
-          onReady={() => {
-            SplashScreen.hideAsync();
-          }}
-        />
-      </SafeAreaProvider>
+      <ProfileProvider>
+        <SafeAreaProvider>
+          <Navigation
+            theme={theme}
+            linking={{
+              enabled: 'auto',
+              prefixes: ['helloworld://'],
+            }}
+            onReady={() => {
+              SplashScreen.hideAsync();
+            }}
+          />
+        </SafeAreaProvider>
+      </ProfileProvider>
     </ThemeProvider>
   );
 }

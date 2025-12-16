@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -13,8 +13,6 @@ type HeaderBarProps = {
 
 export const HeaderBar: React.FC<HeaderBarProps> = ({ title, showBack = true, rightComponent }) => {
   const navigation = useNavigation<any>();
-
-  
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
 
@@ -22,18 +20,18 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ title, showBack = true, ri
     <View style={[styles.container, { backgroundColor }]}>
       {showBack ? (
         <TouchableOpacity
-          style={styles.backButton}
+          style={styles.sideComponent}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back-outline" size={28} color={textColor} />
         </TouchableOpacity>
       ) : (
-        <View style={{ width: 40 }} />
+        <View style={styles.sideComponent} />
       )}
 
       <Text style={[styles.title, { color: textColor }]}>{title}</Text>
 
-      <View style={styles.rightPlaceholder}>
+      <View style={styles.sideComponent}>
         {rightComponent ? rightComponent : null}
       </View>
     </View>
@@ -43,20 +41,19 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ title, showBack = true, ri
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "center",
-    width:"100%",
+    alignItems: "flex-end",      
+    width: "100%",
     paddingHorizontal: 15,
-    paddingVertical: 20,
-    borderRadius: 12,
-    marginTop: 20,
+    paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight + 5 : 20, 
+    paddingBottom: 0,            
+    height: 70,                  
     elevation: 5,
   },
-  backButton: {
+  sideComponent: {
     width: 40,
-    justifyContent: "center",
+    justifyContent: "flex-end",   
     alignItems: "center",
-    padding: 5,
-    borderRadius: 8,
+    paddingBottom: 0,
   },
   title: {
     flex: 1,
@@ -64,10 +61,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     fontFamily: "PoppinsBold",
-  },
-  rightPlaceholder: {
-    width: 40,
-    alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 0,              
   },
 });

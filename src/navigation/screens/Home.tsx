@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SearchBar } from "@/components/ui/serachBar";
 import { useState } from "react";
 import { FormButton } from "@/components/FormButton";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -15,7 +15,7 @@ export function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation<any>();
   const { theme } = useTheme();
-
+  const notificationCount = 3;
 
   const bgColor = theme === "dark" ? Colors.dark.background : Colors.light.background;
   const cardColor = theme === "dark" ? "#2A2A2A" : Colors.light.background;
@@ -24,23 +24,30 @@ export function Home() {
 
   return (
     <ThemedView style={[styles.container, { backgroundColor: bgColor }]}>
-
       <HeaderBar
         title="Dashboard"
         showBack={false}
         rightComponent={
           <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-            <Ionicons
-              name="notifications-outline"
-              size={28}
-              color={secondaryText}
-            />
+            <View style={styles.iconWrapper}>
+              <Ionicons
+                name="notifications-outline"
+                size={28}
+                color={secondaryText}
+              />
+              {notificationCount > 0 && (
+                <View style={styles.badge}>
+                  <ThemedText style={styles.badgeText}>
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </ThemedText>
+                </View>
+              )}
+            </View>
           </TouchableOpacity>
         }
       />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-
         <ThemedText style={[styles.welcomeText, { color: textColor }]} type="title">
           Welcome Back!
         </ThemedText>
@@ -49,7 +56,7 @@ export function Home() {
           <SearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search for content"
+            placeholder="Search for drinks or snacks"
           />
         </View>
 
@@ -63,79 +70,76 @@ export function Home() {
         />
 
         <ThemedText style={[styles.subtitleText, { color: textColor }]} type="subtitle">
-          Daily Specials
+          Today at Our Café
         </ThemedText>
 
         <View style={styles.cardsContainer}>
-         
+          {/* Today’s Special */}
           <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]}>
             <View style={styles.info}>
-              <ThemedText style={[styles.name, { color: textColor }]}>Messages</ThemedText>
+              <ThemedText style={[styles.name, { color: textColor }]}>
+                Today’s Special
+              </ThemedText>
               <ThemedText style={[styles.orderNumber, { color: secondaryText }]}>
-                Check your latest messages
+                Caramel Latte & Butter Croissant
               </ThemedText>
             </View>
             <View style={styles.right}>
-              <Ionicons name="chatbubble-ellipses-outline" size={28} color={secondaryText} />
+              <Ionicons name="cafe-outline" size={28} color={secondaryText} />
             </View>
           </TouchableOpacity>
 
-        
+          {/* Your Orders */}
           <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]}>
             <View style={styles.info}>
-              <ThemedText style={[styles.name, { color: textColor }]}>Settings</ThemedText>
+              <ThemedText style={[styles.name, { color: textColor }]}>
+                Your Orders
+              </ThemedText>
               <ThemedText style={[styles.orderNumber, { color: secondaryText }]}>
-                Manage your preferences
+                Track and reorder your favorites
               </ThemedText>
             </View>
             <View style={styles.right}>
-              <Ionicons name="settings-outline" size={28} color={secondaryText} />
+              <Ionicons name="receipt-outline" size={28} color={secondaryText} />
             </View>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container:
-  {
-    flex: 1
+  container: {
+    flex: 1,
   },
-  searchContainer:
-  {
+  searchContainer: {
     paddingHorizontal: 5,
     marginTop: 5,
-    marginBottom: 10
+    marginBottom: 10,
   },
-  content:
-  {
+  content: {
     padding: 20,
-    paddingBottom: 40
+    paddingBottom: 40,
   },
-  welcomeText:
-  {
+  welcomeText: {
     fontSize: 30,
     fontFamily: "PoppinsBold",
     fontWeight: "700",
     marginBottom: 5,
     marginTop: 15,
-    padding: 5
+    padding: 5,
   },
-  subtitleText:
-  {
+  subtitleText: {
     fontSize: 20,
     fontWeight: "600",
     fontFamily: "Poppins-Regular",
     marginTop: 25,
-    marginBottom: 15
+    marginBottom: 15,
   },
-  cardsContainer:
-  {
+  cardsContainer: {
     flexDirection: "column",
-    gap: 15
+    gap: 15,
   },
   orderCard: {
     flexDirection: "row",
@@ -149,19 +153,37 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   info: {},
-  right:
-  {
+  right: {
     alignItems: "flex-end",
-    justifyContent: "center"
+    justifyContent: "center",
   },
-  name:
-  {
+  name: {
     fontSize: 18,
-    fontWeight: "600"
+    fontWeight: "600",
   },
-  orderNumber:
-  {
+  orderNumber: {
     fontSize: 14,
-    marginVertical: 2
+    marginVertical: 2,
+  },
+  iconWrapper: {
+    position: "relative",
+  },
+  badge: {
+    position: "absolute",
+    top: -6,
+    right: -6,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "#FF3B30",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  badgeText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "700",
+    textAlign: "center",
+    lineHeight: 12,
   },
 });

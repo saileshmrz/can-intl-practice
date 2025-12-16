@@ -21,6 +21,7 @@ import { Login } from "./screens/Login";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Platform } from "react-native";
 import { OrderForm } from "./screens/Home/OrderForm";
+import { EditProfile } from "./screens/profile/EditProfile";
 
 
 const HomeTabs = createBottomTabNavigator({
@@ -123,7 +124,13 @@ const RootStack = createNativeStackNavigator({
         headerShown: false,
         title: "OrderForm"
       }
-
+    },
+      EditProfile: {
+      screen: EditProfile,
+      options: {
+        headerShown: false,
+        title: "EditProfile"
+      }
     },
     NotFound: {
       screen: NotFound,
