@@ -1,15 +1,15 @@
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, Image } from "react-native";
 import { HeaderBar } from "@/components/ui/HeadBar";
 import { Colors } from "@/constants/Colors";
 import { useTheme } from "@/context/ThemeContext";
 
 const sampleOrders = [
-  { id: "1", name: "Cappuccino", orderNumber: "#12345", status: "Delivered", price: "$3.50", time: "2 hours ago" },
-  { id: "2", name: "Latte", orderNumber: "#12346", status: "Preparing", price: "$4.00", time: "1 hour ago" },
-  { id: "3", name: "Espresso", orderNumber: "#12347", status: "Cancelled", price: "$2.50", time: "Yesterday" },
-  { id: "4", name: "Mocha", orderNumber: "#12348", status: "Delivered", price: "$4.50", time: "2 days ago" },
+  { id: "1", name: "Cappuccino", description: "Espresso with steamed milk and foam", price: "$3.50", status: "Delivered", time: "2 hours ago", image: "https://cdn-icons-png.flaticon.com/512/197/197488.png" },
+  { id: "2", name: "Latte", description: "Smooth espresso with milk", price: "$4.00", status: "Preparing", time: "1 hour ago", image: "https://cdn-icons-png.flaticon.com/512/135/135637.png" },
+  { id: "3", name: "Espresso", description: "Strong and bold espresso shot", price: "$2.50", status: "Cancelled", time: "Yesterday", image: "https://cdn-icons-png.flaticon.com/512/135/135623.png" },
+  { id: "4", name: "Mocha", description: "Chocolate flavored espresso", price: "$4.50", status: "Delivered", time: "2 days ago", image: "https://cdn-icons-png.flaticon.com/512/135/135622.png" },
 ];
 
 export function Orders() {
@@ -28,74 +28,91 @@ export function Orders() {
         data={sampleOrders}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        ListFooterComponent={<View style={{ height: 50 }} />}
         renderItem={({ item }) => (
           <View style={[styles.orderCard, { backgroundColor: cardColor }]}>
-            <View style={styles.info}>
+            <Image source={{ uri: item.image }} style={styles.image} />
+
+            <View style={styles.left}>
               <ThemedText style={[styles.name, { color: textColor }]}>{item.name}</ThemedText>
-              <ThemedText style={[styles.orderNumber, { color: secondaryText }]}>{item.orderNumber}</ThemedText>
-              <ThemedText style={[styles.status, { color: textColor, opacity: 0.7 }]}>{item.status}</ThemedText>
+              <ThemedText style={[styles.description, { color: secondaryText }]}>{item.description}</ThemedText>
+              <View style={[styles.statusContainer, { backgroundColor: item.status === "Cancelled" ? "#FFC0C0" : "#E0FFE0" }]}>
+                <ThemedText style={[styles.status, { color: item.status === "Cancelled" ? "red" : "green" }]}>{item.status}</ThemedText>
+              </View>
             </View>
+
             <View style={styles.right}>
               <ThemedText style={[styles.price, { color: textColor }]}>{item.price}</ThemedText>
-              <ThemedText style={[styles.time, { color: secondaryText, opacity: 0.7 }]}>{item.time}</ThemedText>
+              <ThemedText style={[styles.time, { color: secondaryText }]}>{item.time}</ThemedText>
             </View>
           </View>
         )}
       />
+
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container:
-  {
+  container: {
     flex: 1
   },
-  content:
-  {
+  content: {
     padding: 20,
-    gap: 15
+    gap: 16
   },
   orderCard: {
     flexDirection: "row",
     justifyContent: "space-between",
-    borderRadius: 12,
-    padding: 15,
+    padding: 16,
+    borderRadius: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+    alignItems: "center"
   },
-  info: {},
-  right:
-  {
+  image: {
+    width: 64,
+    height: 64,
+    borderRadius: 12,
+    marginRight: 12
+  },
+  left: {
+    flex: 1
+  },
+  right: {
     alignItems: "flex-end"
   },
-  name:
-  {
+  name: {
     fontSize: 18,
     fontWeight: "600"
   },
-  orderNumber:
-  {
+  description: {
     fontSize: 14,
-    marginVertical: 2
+    marginVertical: 2,
+    opacity: 0.8
   },
-  status:
-  {
-    fontSize: 14,
-    fontWeight: "500",
-    opacity: 0.7
+  statusContainer: {
+    marginTop: 6,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    alignSelf: "flex-start"
   },
-  price:
-  {
+  status: {
+    fontSize: 12,
+    fontWeight: "600"
+  },
+  price: {
     fontSize: 16,
     fontWeight: "600"
   },
-  time:
-  {
+  time: {
     fontSize: 12,
     opacity: 0.7
-  },
+  }
 });

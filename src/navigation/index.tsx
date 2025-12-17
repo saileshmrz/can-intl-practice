@@ -22,6 +22,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Platform } from "react-native";
 import { OrderForm } from "./screens/Home/OrderForm";
 import { EditProfile } from "./screens/profile/EditProfile";
+import AddToCart from "./screens/Menu/AddToCart";
 
 
 const HomeTabs = createBottomTabNavigator({
@@ -125,11 +126,19 @@ const RootStack = createNativeStackNavigator({
         title: "OrderForm"
       }
     },
-      EditProfile: {
+    EditProfile: {
       screen: EditProfile,
       options: {
         headerShown: false,
         title: "EditProfile"
+      }
+    },
+   
+    AddToCart: {
+      screen: AddToCart,
+      options: {
+        headerShown: false,
+        title: "AddToCart"
       }
     },
     NotFound: {

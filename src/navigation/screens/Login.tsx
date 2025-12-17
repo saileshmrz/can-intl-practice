@@ -18,7 +18,7 @@ export function Login() {
   const navigation = useNavigation<any>();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { control, handleSubmit, watch, formState: { errors } } = useForm<LoginFormData>({
+  const { control, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
     defaultValues: {
       email: "",
       password: "",

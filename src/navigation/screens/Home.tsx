@@ -74,8 +74,8 @@ export function Home() {
         </ThemedText>
 
         <View style={styles.cardsContainer}>
-          {/* Today’s Special */}
-          <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]}>
+        
+          <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]} onPress={()=>navigation.navigate("Menu")}>
             <View style={styles.info}>
               <ThemedText style={[styles.name, { color: textColor }]}>
                 Today’s Special
@@ -89,8 +89,7 @@ export function Home() {
             </View>
           </TouchableOpacity>
 
-          {/* Your Orders */}
-          <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]}>
+          <TouchableOpacity style={[styles.orderCard, { backgroundColor: cardColor }]} onPress={()=>navigation.navigate("Orders")}>
             <View style={styles.info}>
               <ThemedText style={[styles.name, { color: textColor }]}>
                 Your Orders
