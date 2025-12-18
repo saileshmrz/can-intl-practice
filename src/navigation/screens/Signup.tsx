@@ -14,6 +14,7 @@ import { FormInput } from "@/components/FormInput";
 import { Colors } from "@/constants/Colors";
 import { FormButton } from "@/components/FormButton";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { showToast } from "@/utils/toast";
 
 type SignupFormData = {
   fullName: string;
@@ -39,13 +40,13 @@ export function Signup() {
   const password = watch("password");
 
   const onSubmit = (data: SignupFormData) => {
-    alert("Account created successfully!");
+    showToast("success", "Account created successfully")
     navigation.navigate("Login");
   };
 
   return (
     <KeyboardAvoidingView
-      style={styles.container} // Use main container style
+      style={styles.container} 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >

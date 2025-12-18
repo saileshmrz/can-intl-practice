@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../screens/Home";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Explore } from "../screens/Explore";
 import { Extra } from "../screens/Extra";
 import { HapticTab } from "@/components/HapticTab";
 import { Platform } from "react-native";
@@ -15,15 +14,6 @@ const HomeTabs = createBottomTabNavigator({
         headerShown: false,
         tabBarIcon: ({ color }) => (
           <IconSymbol size={28} name="house.fill" color={color} />
-        ),
-      },
-    },
-    Explore: {
-      screen: Explore,
-      options: {
-        headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <IconSymbol size={28} name="paperplane.fill" color={color} />
         ),
       },
     },

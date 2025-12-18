@@ -72,7 +72,7 @@ export function Profile() {
         contentContainerStyle={{ padding: 20, paddingBottom: 150 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Section */}
+
         <View style={styles.profileSection}>
           <View style={styles.profileContainer}>
             {profileImage ? (
@@ -110,7 +110,7 @@ export function Profile() {
           </View>
         </View>
 
-        {/* Cards */}
+
         <View style={[styles.card, { backgroundColor: cardColor }]}>
           <TouchableOpacity style={styles.infoRow}>
             <MaterialIcons name="favorite" size={24} color={iconColor} />
@@ -142,7 +142,9 @@ export function Profile() {
           </TouchableOpacity>
           <View style={styles.infoRow}>
             <MaterialIcons name="dark-mode" size={24} color={iconColor} />
-            <ThemedText style={[styles.infoValue, { color: textColor }]}>Dark Mode</ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </ThemedText>
             <Switch
               value={theme === "dark"}
               onValueChange={toggleTheme}
@@ -151,6 +153,7 @@ export function Profile() {
               style={{ marginLeft: 'auto' }}
             />
           </View>
+
         </View>
 
         <View style={[styles.card, { backgroundColor: cardColor }]}>
